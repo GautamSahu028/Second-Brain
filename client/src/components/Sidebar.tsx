@@ -5,8 +5,26 @@ import { SidebarItem } from "./SidebarItem.tsx";
 import { LinkIcon } from "../icons/LinkIcon.tsx";
 import { ArticleIcon } from "../icons/ArticleIcon.tsx";
 import { UserIcon } from "../icons/UserIcon.tsx";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { userNameAtom } from "../store/username.atom.tsx";
+import { useEffect } from "react";
+import { useLogout } from "../utils/useLogout.tsx";
 
 export function Sidebar() {
+  const userName = useRecoilValue(userNameAtom);
+  const setUserName = useSetRecoilState(userNameAtom);
+
+  const logout = useLogout();
+
+  useEffect(() => {
+    const getUsername = localStorage.getItem("username");
+    if (getUsername && getUsername !== userName) {
+      setUserName(getUsername);
+    }
+  }, [userName]); // Only run once on mount
+
+  console.log(userName);
+
   return (
     <div className="h-screen bg-white border-r border-2 fixed left-0 top-0 w-16 md:w-64 flex flex-col justify-between">
       {/* Top Section: Logo and Items */}
@@ -22,7 +40,7 @@ export function Sidebar() {
         {/* Sidebar Items */}
         <div className="pt-4">
           {/* Expanded view */}
-          <div className="hidden md:block space-y-4 md:space-y-2 md:pl-4">
+          <div className="hidden sm:block space-y-4 md:space-y-2 md:pl-4">
             <SidebarItem text="Tweets" icon={<TweetIcon size="md" />} />
             <SidebarItem text="Videos" icon={<YoutubeIcon size="md" />} />
             <SidebarItem text="Documents" icon={<ArticleIcon size="md" />} />
@@ -30,7 +48,7 @@ export function Sidebar() {
           </div>
 
           {/* Collapsed view */}
-          <div className="flex flex-col items-center space-y-2 mt-1 md:hidden">
+          <div className="flex flex-col items-center space-y-2 mt-1 sm:hidden">
             <div className="hover:bg-gray-100 cursor-pointer pl-5 py-2 rounded w-full text-gray-700">
               <TweetIcon size="md" />
             </div>
@@ -48,13 +66,25 @@ export function Sidebar() {
       </div>
 
       {/* Bottom Section: User Icon */}
-      <div className="mb-4 hidden md:block sm:pl-2 sm:font-semibold">
-        <SidebarItem text="Welcome User" icon={<UserIcon size="lg" />} />
+      <div
+        className="mb-4 hidden md:block sm:pl-2 sm:font-semibold"
+        onClick={logout}
+      >
+        <SidebarItem
+          text={userName ? `Hii ${userName}` : "Sign-in"}
+          icon={<UserIcon size="lg" />}
+        />
       </div>
       {/* Bottom Section: Collapsed User Icon */}
-      <div className="flex flex-col items-center space-y-2 mt-1 md:hidden">
-        <div className="hover:bg-gray-100 cursor-pointer pb-2 mb-2  rounded w-full text-gray-700">
-          <SidebarItem text="Welcome User" icon={<UserIcon size="lg" />} />
+      <div
+        className="flex flex-col items-center space-y-2 mt-1 md:hidden"
+        onClick={logout}
+      >
+        <div className="hover:bg-gray-100 cursor-pointer pb-2 mb-2 rounded w-full text-gray-700">
+          <SidebarItem
+            text={userName ? `Hii ${userName}` : "Sign-in"}
+            icon={<UserIcon size="lg" />}
+          />
         </div>
       </div>
     </div>
