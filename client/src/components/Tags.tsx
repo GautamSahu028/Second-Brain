@@ -5,7 +5,7 @@ interface TagsProp {
 const Tags = (props: TagsProp) => {
   const tags = props.tags;
   return (
-    <div className="pt-5 pb-5">
+    <div className="pt-5 pb-5 flex flex-wrap">
       {tags.map((tag) => {
         return <Tag key={tag} tagName={tag} />;
       })}

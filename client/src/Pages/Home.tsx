@@ -13,11 +13,7 @@ import { BACKEND_URL } from "../config.tsx";
 import { useEffect } from "react";
 import { loadingAtom } from "../store/loading.atom.tsx";
 import { loginAtom } from "../store/login.atom.tsx";
-import { useLogout } from "../utils/useLogout.tsx";
-import SignIn from "./SignIn.tsx";
 import { Loading } from "../components/Loading.tsx";
-import SignUp from "./SignUp.tsx";
-import { signInAtom } from "../store/signIn.atom.tsx";
 
 export function Home() {
   const isOpen = useRecoilValue(modalAtom);
@@ -33,11 +29,6 @@ export function Home() {
 
   const isLoggedIn = useRecoilValue(loginAtom);
   const setIsLoggedIn = useSetRecoilState(loginAtom);
-
-  const signIn = useRecoilValue(signInAtom);
-
-  const logout = useLogout();
-
   useEffect(() => {
     setLoading(true);
     const getData = async () => {
@@ -65,6 +56,7 @@ export function Home() {
     };
 
     getData();
+    // console.log("data", data);
   }, [isLoggedIn, setData, setLoading]);
 
   return (
@@ -96,11 +88,12 @@ export function Home() {
             <Loading />
           </div>
         ) : isLoggedIn ? (
-          <div className="flex md:flex-wrap md:flex-row flex-col justify-center gap-x-4 gap-y-4 pl-20 md:pl-72 mr-18">
+          <div className="flex md:flex-wrap md:flex-row flex-col allign-center gap-x-4 gap-y-4 pl-20 md:pl-72 mr-18 h-screen">
             {data && data.length > 0 ? (
-              data.map(({ link, type, title, tags, _id }) => (
+              data.map(({ _id, link, type, title, tags }) => (
                 <Card
                   key={_id}
+                  contentId={_id}
                   link={link}
                   type={type}
                   title={title}
@@ -115,7 +108,14 @@ export function Home() {
             )}
           </div>
         ) : (
-          <SignIn />
+          <div className="flex justify-center items-center h-screen w-full">
+            <div className="flex flex-col items-center border-2 border-gray-200 bg-white max-w-2xl p-4 rounded-lg">
+              <p>
+                Please <a href="http://localhost:5173/sign-in">Sign in</a> to
+                your brain.
+              </p>
+            </div>
+          </div>
         )}
       </div>
     </div>

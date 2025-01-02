@@ -37,8 +37,7 @@ export function Form() {
           },
         }
       );
-
-      alert("Content added successfully!");
+      window.location.reload();
     } catch (error) {
       console.error("Error adding content:", error);
       alert("Failed to add content. Please try again.");

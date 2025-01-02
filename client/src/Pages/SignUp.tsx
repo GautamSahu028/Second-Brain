@@ -3,6 +3,7 @@ import axios from "axios";
 import { BACKEND_URL, FRONTEND_URL } from "../config.tsx";
 
 interface SignUpData {
+  name: string;
   username: string;
   password: string;
 }
@@ -13,9 +14,10 @@ const SignUp = () => {
     formState: { errors },
   } = useForm<SignUpData>();
 
-  const onSubmit = async ({ username, password }: SignUpData) => {
+  const onSubmit = async ({ name, username, password }: SignUpData) => {
     try {
       const response = await axios.post(`${BACKEND_URL}/api/v1/sign-up`, {
+        name,
         username,
         password,
       });
@@ -31,7 +33,7 @@ const SignUp = () => {
     }
   };
   return (
-    <div className="flex items-center justify-center min-h-screen bg-slate-100 ml-16">
+    <div className="flex items-center justify-center min-h-screen bg-slate-100">
       <form
         className="flex flex-col gap-6 bg-white border-1 border-gray-300 p-6 rounded-lg shadow-md w-72 max-w-80"
         onSubmit={handleSubmit(onSubmit)}
@@ -43,6 +45,15 @@ const SignUp = () => {
         {/* {errorMessage && (
           <p className="text-red-500 text-sm text-center">{errorMessage}</p>
         )} */}
+        <div>
+          <label className="block text-gray-700 font-medium mb-2">Name</label>
+          <input
+            type="text"
+            placeholder="Enter your name"
+            className="border p-2 rounded w-full focus:ring-2 focus:ring-purple-600 outline-none"
+            {...register("name", { required: "Name is required" })}
+          />
+        </div>
 
         <div>
           <label className="block text-gray-700 font-medium mb-2">

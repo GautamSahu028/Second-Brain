@@ -14,10 +14,11 @@ const userRouter = Router();
 userRouter.post("/sign-up", async (req, res) => {
   // validate username and password using ZOD
   const requiredBody = z.object({
+    name: z.string(),
     username: z.string().min(5),
     password: z
       .string()
-      .min(8, "The password length must have minimum three characters")
+      .min(8, "The password length must have minimum eight characters")
       .max(20, "The password is too long")
       .regex(/^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[^A-Za-z0-9]).{8,}$/),
   });
@@ -28,7 +29,7 @@ userRouter.post("/sign-up", async (req, res) => {
   }
 
   // get the data from body
-  const { username, password } = req.body;
+  const { name, username, password } = req.body;
 
   // check if user already exist
   const userExists = await userModel.findOne({
@@ -44,6 +45,7 @@ userRouter.post("/sign-up", async (req, res) => {
 
   // create a new user
   const user = await userModel.create({
+    name,
     username,
     password: hashedPassword,
   });
@@ -144,13 +146,37 @@ userRouter.get("/content", userAuthMiddleware, async (req, res) => {
   try {
     const user = req.userId;
     const allData = await contentModel.find({ userId: user });
-    // .populate("tags", "title");
+    const temp = await contentModel
+      .find({ userId: user })
+      .populate("tags", "title");
+    // const titles = temp.map((content) => content.tags.map((tag) => tag.title));
+    // console.log(titles);
+    // console.log(temp);
+
+    // console.log(
+    //   temp.map(
+    //     (content) => content.tags.map((tag) => tag.title) // Map over the tags array to extract titles
+    //   )
+    // );
+
+    // console.log(temp);
+
+    // for (const obj of temp) {
+    //   let titles = obj.tags.map((tag) => tag.title);
+    //   obj.tags = titles;
+    // }
+    // console.log(temp);
 
     if (allData.length === 0) {
       return res
         .status(404)
         .json(new ApiResponse(404, "No content found for the user"));
     }
+    const transformedData = allData.map((content) => ({
+      ...content.toObject(), // Convert Mongoose document to plain object
+      tags: content.tags.map((tag) => tag.title), // Replace tags with titles
+    }));
+    // console.log(transformedData);
 
     return res.status(200).json(new ApiResponse(200, allData));
   } catch (error) {
@@ -161,7 +187,7 @@ userRouter.get("/content", userAuthMiddleware, async (req, res) => {
 
 userRouter.delete("/content", userAuthMiddleware, async (req, res) => {
   try {
-    const { contentId } = req.body;
+    const contentId = req.headers.contentid; // Extract contentId from headers
     if (!contentId) {
       return res
         .status(400)
