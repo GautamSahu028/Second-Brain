@@ -6,7 +6,7 @@ interface CardsProps {
 
 const Cards: React.FC<CardsProps> = ({ data }) => {
   return (
-    <div className="h-screen w-screen">
+    <div className="h-screen">
       <div className="flex md:flex-wrap md:flex-row flex-col align-center gap-x-4 gap-y-4 pl-20 md:pl-72 mr-18 mt-4">
         {data && data.length > 0 ? (
           // @ts-ignore
