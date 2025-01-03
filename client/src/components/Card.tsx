@@ -120,7 +120,7 @@ export const Card = ({
           <span>{title}</span>
         </div>
         <div className="flex items-center">
-          <div className="text-gray-500 pr-2">
+          <div className="text-gray-500 pr-2 hover:cursor-pointer">
             <ShareIcon size="md" />
           </div>
           <div
