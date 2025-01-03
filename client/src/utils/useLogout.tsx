@@ -17,7 +17,7 @@ export const useLogout = () => {
     resetContent([]);
 
     // Redirect to sign-in page
-    window.location.href = `${FRONTEND_URL}/home`; // Adjust route as per your app
+    window.location.href = `${FRONTEND_URL}/`; // Adjust route as per your app
   };
 
   return logout;

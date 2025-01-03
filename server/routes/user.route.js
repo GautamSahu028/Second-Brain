@@ -110,7 +110,7 @@ userRouter.post("/sign-in", async (req, res) => {
 });
 
 userRouter.post("/content", userAuthMiddleware, async (req, res) => {
-  const { type, link, title, tags } = req.body;
+  const { type, link, title, tags, date } = req.body;
   const tagIds = await Promise.all(
     tags.map(async (tagTitle) => {
       let tag = await tagModel.findOne({ title: tagTitle });
@@ -132,6 +132,7 @@ userRouter.post("/content", userAuthMiddleware, async (req, res) => {
     title,
     tags: tagIds,
     userId: req.userId,
+    date,
   });
   const createdContent = await contentModel.findOne(content._id);
   if (!createdContent) {

@@ -35,7 +35,7 @@ const SignIn = () => {
       localStorage.setItem("username", username);
 
       alert("Signed in successfully!");
-      window.location.href = `${FRONTEND_URL}/home`; // Redirect to home page
+      window.location.href = `${FRONTEND_URL}/`; // Redirect to home page
     } catch (error) {
       console.error("Error during sign-in:", error);
       setErrorMessage("Invalid credentials.");

@@ -1,7 +1,8 @@
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { BACKEND_URL } from "../config.tsx";
-const contentTypes = ["image", "video", "article", "audio", "tweet"];
+import { contentTypes } from "../config.tsx";
+
 interface FormData {
   link: string;
   type: string;
@@ -30,6 +31,7 @@ export function Form() {
           link: link,
           title: title,
           tags: tags.split(",").map((tag) => tag.trim()),
+          date: new Date().toLocaleString(),
         },
         {
           headers: {

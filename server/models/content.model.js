@@ -8,6 +8,7 @@ const contentSchema = new Schema({
   title: { type: String, required: true },
   tags: [{ type: Schema.Types.ObjectId, ref: "tag" }],
   userId: { type: Schema.Types.ObjectId, ref: "user", required: true },
+  date: { type: String, default: Date.now },
 });
 
 const contentModel = mongoose.model("content", contentSchema);
