@@ -70,7 +70,9 @@ export function Article() {
             <Loading />
           </div>
         ) : isLoggedIn ? (
-          <Cards data={data} />
+          <div className="flex-grow overflow-auto bg-slate-100">
+            <Cards data={data} />
+          </div>
         ) : (
           <PleaseSignIn />
         )}

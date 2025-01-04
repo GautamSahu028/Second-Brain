@@ -1,6 +1,6 @@
 import mongoose, { Schema } from "mongoose";
 
-const contentTypes = ["image", "video", "article", "audio", "tweet"];
+const contentTypes = ["image", "video", "article", "tweet"];
 
 const contentSchema = new Schema({
   link: { type: String, required: true },
@@ -9,6 +9,7 @@ const contentSchema = new Schema({
   tags: [{ type: Schema.Types.ObjectId, ref: "tag" }],
   userId: { type: Schema.Types.ObjectId, ref: "user", required: true },
   date: { type: String, default: Date.now },
+  desc: { type: String },
 });
 
 const contentModel = mongoose.model("content", contentSchema);

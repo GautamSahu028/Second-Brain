@@ -9,21 +9,23 @@ interface FormData {
   title: string;
   tags: string;
   date: string;
+  desc: string;
 }
 export function Form() {
   const {
     register,
     handleSubmit,
+    // @ts-ignore
     formState: { errors },
   } = useForm<FormData>();
 
-  const onSubmit = async ({ link, type, title, tags }: FormData) => {
+  const onSubmit = async ({ link, type, title, tags, desc }: FormData) => {
     try {
       const token = localStorage.getItem("accessToken"); // Retrieve token from localStorage
       if (!token) {
         throw new Error("User is not authenticated");
       }
-
+      // @ts-ignore
       const response = await axios.post(
         `${BACKEND_URL}/api/v1/content`,
         {
@@ -32,6 +34,7 @@ export function Form() {
           title: title,
           tags: tags.split(",").map((tag) => tag.trim()),
           date: new Date().toLocaleString(),
+          desc: desc,
         },
         {
           headers: {
@@ -82,6 +85,16 @@ export function Form() {
             placeholder="Enter content title"
             className="border p-2 rounded w-full"
             {...register("title", { required: true })}
+          />
+        </div>
+
+        <div>
+          <label className="block text-gray-700">Description</label>
+          <input
+            type="text"
+            placeholder="Enter Description"
+            className="border p-2 rounded w-full"
+            {...register("desc", { required: true })}
           />
         </div>
 

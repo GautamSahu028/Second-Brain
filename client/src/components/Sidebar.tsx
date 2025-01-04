@@ -25,8 +25,6 @@ export function Sidebar() {
     }
   }, [userName]); // Only run once on mount
 
-  console.log(userName);
-
   return (
     <div className="h-screen bg-white border-r border-2 fixed left-0 top-0 w-16 md:w-64 flex flex-col justify-between">
       {/* Top Section: Logo and Items */}
@@ -76,13 +74,6 @@ export function Sidebar() {
                 window.location.href = `${FRONTEND_URL}/images`;
               }}
             />
-            <SidebarItem
-              text="Audio"
-              icon={<AudioIcon size="md" />}
-              onClick={() => {
-                window.location.href = `${FRONTEND_URL}/audios`;
-              }}
-            />
           </div>
 
           {/* Collapsed view */}
@@ -118,14 +109,6 @@ export function Sidebar() {
               }}
             >
               <ImageIcon size="md" />
-            </div>
-            <div
-              className="hover:bg-gray-100 cursor-pointer pl-5 py-2 rounded w-full text-gray-700"
-              onClick={() => {
-                window.location.href = `${FRONTEND_URL}/audios`;
-              }}
-            >
-              <AudioIcon size="md" />
             </div>
           </div>
         </div>

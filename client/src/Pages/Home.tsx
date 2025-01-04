@@ -56,7 +56,7 @@ export function Home() {
     };
 
     getData();
-    // console.log("data", data);
+    console.log("data :", data);
   }, [isLoggedIn, setData, setLoading]);
 
   return (
@@ -88,7 +88,9 @@ export function Home() {
             <Loading />
           </div>
         ) : isLoggedIn ? (
-          <Cards data={data} />
+          <div className="flex-grow overflow-auto bg-slate-100">
+            <Cards data={data} />
+          </div>
         ) : (
           <PleaseSignIn />
         )}

@@ -110,7 +110,7 @@ userRouter.post("/sign-in", async (req, res) => {
 });
 
 userRouter.post("/content", userAuthMiddleware, async (req, res) => {
-  const { type, link, title, tags, date } = req.body;
+  const { type, link, title, tags, date, desc } = req.body;
   const tagIds = await Promise.all(
     tags.map(async (tagTitle) => {
       let tag = await tagModel.findOne({ title: tagTitle });
@@ -133,6 +133,7 @@ userRouter.post("/content", userAuthMiddleware, async (req, res) => {
     tags: tagIds,
     userId: req.userId,
     date,
+    desc,
   });
   const createdContent = await contentModel.findOne(content._id);
   if (!createdContent) {
@@ -146,40 +147,25 @@ userRouter.post("/content", userAuthMiddleware, async (req, res) => {
 userRouter.get("/content", userAuthMiddleware, async (req, res) => {
   try {
     const user = req.userId;
-    const allData = await contentModel.find({ userId: user });
-    const temp = await contentModel
+
+    // Fetch data and populate tags with their titles
+    const allData = await contentModel
       .find({ userId: user })
       .populate("tags", "title");
-    // const titles = temp.map((content) => content.tags.map((tag) => tag.title));
-    // console.log(titles);
-    // console.log(temp);
-
-    // console.log(
-    //   temp.map(
-    //     (content) => content.tags.map((tag) => tag.title) // Map over the tags array to extract titles
-    //   )
-    // );
-
-    // console.log(temp);
-
-    // for (const obj of temp) {
-    //   let titles = obj.tags.map((tag) => tag.title);
-    //   obj.tags = titles;
-    // }
-    // console.log(temp);
 
     if (allData.length === 0) {
       return res
         .status(404)
         .json(new ApiResponse(404, "No content found for the user"));
     }
+
+    // Transform the data if necessary
     const transformedData = allData.map((content) => ({
       ...content.toObject(), // Convert Mongoose document to plain object
       tags: content.tags.map((tag) => tag.title), // Replace tags with titles
     }));
-    // console.log(transformedData);
 
-    return res.status(200).json(new ApiResponse(200, allData));
+    return res.status(200).json(new ApiResponse(200, transformedData));
   } catch (error) {
     console.error("Error fetching content:", error);
     return res.status(500).json(new ApiResponse(500, "Internal server error"));

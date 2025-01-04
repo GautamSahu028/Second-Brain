@@ -6,6 +6,9 @@ import Tags from "./Tags.tsx";
 import { YoutubeIcon } from "../icons/YoutubeIcon.tsx";
 import axios from "axios";
 import { BACKEND_URL } from "../config.tsx";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { readMore } from "../store/readMore.atom.tsx";
+import { ImageIcon } from "../icons/ImageIcon.tsx";
 
 interface CardProps {
   contentId: string; // Change from key to contentId
@@ -14,6 +17,7 @@ interface CardProps {
   title: string;
   tags: string[];
   addedDate: string;
+  desc: string;
 }
 
 export const Card = ({
@@ -23,6 +27,7 @@ export const Card = ({
   title,
   tags,
   addedDate,
+  desc,
 }: CardProps) => {
   const renderIcon = () => {
     switch (type) {
@@ -32,6 +37,8 @@ export const Card = ({
         return <TweetIcon size="md" />;
       case "article":
         return <ArticleIcon size="md" />;
+      case "image":
+        return <ImageIcon size="md" />;
       default:
         return null;
     }
@@ -49,7 +56,7 @@ export const Card = ({
 
       return (
         <iframe
-          className="w-full h-40 rounded"
+          className="w-full h-40 rounded object-contain"
           src={embedUrl}
           title={title}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
@@ -78,6 +85,16 @@ export const Card = ({
         >
           Read Article
         </a>
+      );
+    } else if (type === "image") {
+      return (
+        <img
+          src={link}
+          alt={title}
+          className="w-full h-60 object-contain rounded hover:cursor-pointer bg-gray-100"
+          onError={(e) => (e.currentTarget.src = "fallback-image-url")}
+          onClick={() => window.open(link, "_blank")}
+        />
       );
     } else {
       return <p className="text-gray-500">Unsupported content type</p>;
@@ -112,8 +129,11 @@ export const Card = ({
     }
   };
 
+  const isReadMore = useRecoilValue(readMore);
+  const setIsReadMore = useSetRecoilState(readMore);
+
   return (
-    <div className="p-4 bg-white rounded-md border border-gray-200 w-fit h-fit max-w-md">
+    <div className="p-4 bg-white rounded-md border border-gray-200 w-fit h-fit max-w-xs">
       <div className="flex justify-between">
         <div className="flex items-center text-md">
           <div className="text-gray-500 pr-2">{renderIcon()}</div>
@@ -133,6 +153,18 @@ export const Card = ({
       </div>
 
       <div className="pt-4">{renderMedia()}</div>
+
+      <div className="mt-2">
+        <p>
+          {isReadMore ? desc : desc.substring(0, 150) + "..."}
+          <span
+            className="text-blue-500 cursor-pointer"
+            onClick={() => setIsReadMore(!isReadMore)}
+          >
+            {isReadMore ? " read less" : "read more"}
+          </span>
+        </p>
+      </div>
 
       <Tags tags={tags} />
 
