@@ -1,5 +1,5 @@
-import { atom } from "recoil";
-export const readMore = atom({
+import { atomFamily } from "recoil";
+export const readMore = atomFamily({
   key: "readMore",
   default: false,
 });

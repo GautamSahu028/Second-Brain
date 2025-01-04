@@ -6,7 +6,7 @@ import Tags from "./Tags.tsx";
 import { YoutubeIcon } from "../icons/YoutubeIcon.tsx";
 import axios from "axios";
 import { BACKEND_URL } from "../config.tsx";
-import { useRecoilValue, useSetRecoilState } from "recoil";
+import { useRecoilState } from "recoil";
 import { readMore } from "../store/readMore.atom.tsx";
 import { ImageIcon } from "../icons/ImageIcon.tsx";
 
@@ -129,8 +129,7 @@ export const Card = ({
     }
   };
 
-  const isReadMore = useRecoilValue(readMore);
-  const setIsReadMore = useSetRecoilState(readMore);
+  const [isReadMore, setIsReadMore] = useRecoilState(readMore(contentId));
 
   return (
     <div className="p-4 bg-white rounded-md border border-gray-200 w-fit h-fit max-w-xs">
