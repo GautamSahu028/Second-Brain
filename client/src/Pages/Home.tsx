@@ -29,6 +29,7 @@ export function Home() {
 
   const isLoggedIn = useRecoilValue(loginAtom);
   const setIsLoggedIn = useSetRecoilState(loginAtom);
+
   useEffect(() => {
     setLoading(true);
     const getData = async () => {
@@ -59,6 +60,29 @@ export function Home() {
     console.log("data :", data);
   }, [isLoggedIn, setData, setLoading]);
 
+  const handleShare = async () => {
+    try {
+      const accessToken = localStorage.getItem("accessToken");
+      const response = await axios.post(
+        `${BACKEND_URL}/api/v1/share`,
+        { share: true }, // Body
+        {
+          headers: {
+            Authorization: accessToken, // Headers
+          },
+        }
+      );
+      navigator.clipboard.writeText(response.data.data.link);
+      alert("Link copied to clipboard!");
+    } catch (error) {
+      if (axios.isAxiosError(error)) {
+        console.error("Error sharing:", error.response?.data || error.message);
+      } else {
+        console.error("Error sharing:", error);
+      }
+    }
+  };
+
   return (
     <div className="flex h-full bg-slate-100">
       <Modal open={isOpen} onClose={closeModal} />
@@ -77,7 +101,7 @@ export function Home() {
             variant="secondary"
             size="md"
             startIcon={<ShareIcon size="md" />}
-            onClick={() => console.log("Share Brain")}
+            onClick={handleShare}
             text="Share Brain"
           />
         </div>

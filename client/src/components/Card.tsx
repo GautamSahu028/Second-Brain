@@ -129,6 +129,16 @@ export const Card = ({
     }
   };
 
+  const handleCopy = async () => {
+    try {
+      await navigator.clipboard.writeText(link);
+      alert("Link copied to clipboard!");
+    } catch (err) {
+      alert("Failed to copy link.");
+      console.error("Error copying text: ", err);
+    }
+  };
+
   const [isReadMore, setIsReadMore] = useRecoilState(readMore(contentId));
 
   return (
@@ -139,7 +149,10 @@ export const Card = ({
           <span>{title}</span>
         </div>
         <div className="flex items-center">
-          <div className="text-gray-500 pr-2 hover:cursor-pointer">
+          <div
+            className="text-gray-500 pr-2 hover:cursor-pointer"
+            onClick={handleCopy}
+          >
             <ShareIcon size="md" />
           </div>
           <div

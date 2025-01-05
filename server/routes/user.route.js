@@ -216,7 +216,7 @@ userRouter.post("/share", userAuthMiddleware, async (req, res) => {
       });
     }
 
-    const link = `https://yourdomain.com/brain/${shareLink.hash}`;
+    const link = `http://localhost:5173/brain/${shareLink.hash}`;
 
     return res
       .status(200)
@@ -231,11 +231,12 @@ userRouter.post("/share", userAuthMiddleware, async (req, res) => {
 
 userRouter.get("/brain/:shareLink", async (req, res) => {
   try {
-    const { hash } = req.params.shareLink;
+    const hash = req.params.shareLink;
+    // console.log("hash : ", hash);
 
     // Find the share link document
     const link = await linkModel.find({ hash });
-    // console.log(link);
+    // console.log("link : ", link[0]);
 
     if (!link) {
       return res
@@ -243,26 +244,29 @@ userRouter.get("/brain/:shareLink", async (req, res) => {
         .json(new ApiResponse(404, "Share link not found or sharing disabled"));
     }
 
+    // console.log("link.userId : ", link[0].userId);
+
     // Fetch the user's content
-    const content = await contentModel.find({ userId: link.userId });
+    const content = await contentModel
+      .find({ userId: link[0].userId })
+      .populate("tags", "title");
+
+    // Transform the data if necessary
+    const transformedData = content.map((content) => ({
+      ...content.toObject(), // Convert Mongoose document to plain object
+      tags: content.tags.map((tag) => tag.title), // Replace tags with titles
+    }));
+    // console.log("transformedData : ", transformedData);
 
     // Fetch user
     const user = await userModel.findOne({ userId: link.userId });
-
-    // Map content data to the desired format
-    const contentData = content.map((item) => ({
-      id: item._id,
-      type: item.type,
-      link: item.link,
-      title: item.title,
-      tags: item.tags.map((tagId) => tagId.toString()), // Convert ObjectId tags to strings
-    }));
+    // console.log("user : ", user.username);
 
     // Return the response with the username and content data
     return res.status(200).json(
       new ApiResponse(200, {
         username: user.username,
-        content: contentData,
+        content: transformedData,
       })
     );
   } catch (error) {

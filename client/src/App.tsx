@@ -9,6 +9,7 @@ import { Tweet } from "./Pages/Tweet.tsx";
 import { Audio } from "./Pages/Audio.tsx";
 import { Article } from "./Pages/Article.tsx";
 import { Image } from "./Pages/Image.tsx";
+import { ShareableContent } from "./Pages/ShareableContent.tsx";
 function App() {
   return (
     <RecoilRoot>
@@ -26,6 +27,7 @@ function App() {
           <Route path="/audios" element={<Audio />} />
           <Route path="/articles" element={<Article />} />
           <Route path="/images" element={<Image />} />
+          <Route path="/brain/:shareLink" element={<ShareableContent />} />
         </Routes>
       </BrowserRouter>
     </RecoilRoot>

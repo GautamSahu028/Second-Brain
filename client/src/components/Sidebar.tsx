@@ -9,7 +9,6 @@ import { userNameAtom } from "../store/username.atom.tsx";
 import { useEffect } from "react";
 import { useLogout } from "../utils/useLogout.tsx";
 import { ImageIcon } from "../icons/ImageIcon.tsx";
-import { AudioIcon } from "../icons/AudioIcon.tsx";
 import { FRONTEND_URL } from "../config.tsx";
 
 export function Sidebar() {
