@@ -6,7 +6,7 @@ import Tags from "./Tags.tsx";
 import { YoutubeIcon } from "../icons/YoutubeIcon.tsx";
 import axios from "axios";
 import { BACKEND_URL } from "../config.tsx";
-import { useRecoilState } from "recoil";
+import { DefaultValue, useRecoilState } from "recoil";
 import { readMore } from "../store/readMore.atom.tsx";
 import { ImageIcon } from "../icons/ImageIcon.tsx";
 
@@ -18,6 +18,7 @@ interface CardProps {
   tags: string[];
   addedDate: string;
   desc: string;
+  viewOnly?: boolean;
 }
 
 export const Card = ({
@@ -28,6 +29,7 @@ export const Card = ({
   tags,
   addedDate,
   desc,
+  viewOnly,
 }: CardProps) => {
   const renderIcon = () => {
     switch (type) {
@@ -155,12 +157,14 @@ export const Card = ({
           >
             <ShareIcon size="md" />
           </div>
-          <div
-            className="text-gray-500 hover:cursor-pointer"
-            onClick={handleDelete}
-          >
-            <DeleteIcon size="md" />
-          </div>
+          {viewOnly ? null : (
+            <div
+              className="text-gray-500 hover:cursor-pointer"
+              onClick={handleDelete}
+            >
+              <DeleteIcon size="md" />
+            </div>
+          )}
         </div>
       </div>
 

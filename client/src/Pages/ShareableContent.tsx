@@ -85,6 +85,7 @@ export function ShareableContent() {
                       tags={tags}
                       addedDate={date}
                       desc={desc}
+                      viewOnly={true}
                     />
                   ))
                 ) : (
